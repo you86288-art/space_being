@@ -1,5 +1,5 @@
 // 토스페이먼츠 결제 승인. 환경변수: TOSS_SECRET_KEY (test_sk_... 또는 live_sk_...)
-import {live,r,pipe,clean} from './_kv.js';
+import {live,r,pipe,clean} from './kv.js';
 export default async function handler(req,res){
   res.setHeader('Cache-Control','no-store');
   if(req.method!=='POST')return res.status(405).end();

@@ -1,4 +1,4 @@
-import {live,r,pipe} from './_kv.js';
+import {live,r,pipe} from './kv.js';
 export default async function handler(req,res){
   res.setHeader('Cache-Control','public, max-age=20');
   if(!live)return res.status(200).json({items:[]});

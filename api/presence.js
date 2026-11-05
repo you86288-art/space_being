@@ -1,5 +1,5 @@
 // Vercel Serverless + Upstash Redis (KV). 환경변수: KV_REST_API_URL, KV_REST_API_TOKEN
-import {live,r,pipe} from './_kv.js';
+import {live,r,pipe} from './kv.js';
 export default async function handler(req,res){
   res.setHeader('Cache-Control','no-store');
   if(!live)return res.status(200).json({here:1,total:0,wishes:0,live:false});
