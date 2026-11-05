@@ -94,7 +94,7 @@ h1{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:-.02em
 #wish .tiers button span{display:block;font-size:9.5px;margin-top:3px;color:var(--dim);line-height:1.3;word-break:keep-all}
 #wish .tiers button.on{border-color:rgba(200,160,99,.6);background:rgba(200,160,99,.07)}
 #wish .tiers button.on b{color:var(--ember)}
-#wish .tierNote{font-size:11px;color:var(--dim);margin:12px 0 0;line-height:1.6}
+#wish .tierNote{font-family:var(--serif);font-size:14px;color:var(--bone);margin:14px 0 0;line-height:1.7;min-height:24px;transition:opacity .16s}
 #wish .fine{font-size:11px;color:var(--dim);text-align:center;margin-top:12px}
 #wish .lnk{background:none;border:none;color:var(--ash);font:inherit;font-size:11px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
 #wish .sheet{max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -176,8 +176,8 @@ body.busy #wishStar,body.busy #mystar{display:none}
     <textarea id="wishText" maxlength="500" placeholder="여기에."></textarea>
     <div class="cnt"><span id="wishCnt">0</span> / 500</div>
     <div class="seg" id="vis">
-      <button class="on" data-vis="0"><b>혼자 띄운다</b><span>아무도 읽지 않는다</span></button>
-      <button data-vis="1"><b>함께 빌어주세요</b><span>한 줄만 하늘에 보인다</span></button>
+      <button class="on" data-vis="0"><b>혼자 띄운다</b><span>아무도 읽지 않아요</span></button>
+      <button data-vis="1"><b>함께 빌어주세요</b><span>한 줄만 하늘에 보여요</span></button>
     </div>
     <div id="pubRow"><input id="pubLine" maxlength="40" placeholder="하늘에 보일 한 줄 (40자)"><div class="cnt"><span id="pubCnt">0</span> / 40</div></div>
     <div class="k" style="margin-top:18px">마음의 크기</div>
@@ -189,10 +189,11 @@ body.busy #wishStar,body.busy #mystar{display:none}
       <button data-t="4"><i style="--s:12px;--gold:1"></i><b>99,000</b><span>평생의 소원</span></button>
     </div>
     <div id="nameRow"><input id="starName" maxlength="6" placeholder="별에 새길 이름 (6자 · 나에게만 보인다)"></div>
-    <p class="tierNote" id="tierNote">금액은 별의 밝기만 바꾼다. 이루어지는 것과는 관계없다.</p>
+    <p class="tierNote" id="tierNote">잊고 싶지 않은 것 하나. 그만큼 밝아진다.</p>
     <div class="price"><span id="priceLabel">조금 밝은 별 · 이 하늘에 영원히</span><b id="priceVal">3,900원</b></div>
     <div class="row"><button class="btn" data-act="wishClose">닫기</button><button class="btn pri" data-act="wishSend">띄우기</button></div>
-    <p class="fine">이어폰을 끼면 소리가 다르다 · <button class="lnk" data-act="customAmt">다른 금액</button></p>
+    <p class="fine">우주는 약속하지 않는다. 띄우는 건 너다.</p>
+    <p class="fine" style="margin-top:4px">이어폰을 끼면 소리가 다르다 · <button class="lnk" data-act="customAmt">다른 금액</button></p>
   </div>
 </div>
 <div id="msg">
@@ -377,17 +378,18 @@ if(PRES.mine!=null){document.getElementById('mystar').classList.add('show');docu
 var PAY_MODE='toss'; /* 'test' → 결제 없이 흐름만 · 'toss' → 실결제 */
 var TOSS_CLIENT_KEY='test_ck_c19wocmNLyhvwVfb9YiBAurGD59yMHTLVh'; /* 토스 개발자센터 → API 키 → 클라이언트 키 */
 var TIERS=[
- {amt:990,  label:'작은 별',      tone:[[432,0,.05],[216,0,.03]]},
- {amt:3900, label:'조금 밝은 별',  tone:[[528,0,.05],[792,1.1,.03]]},
- {amt:9900, label:'두 음이 울리는 별',tone:[[396,0,.045],[528,1.0,.045],[639,2.0,.035]]},
- {amt:29000,label:'유성 · 세 음',  tone:[[396,0,.045],[528,.9,.045],[639,1.8,.04],[852,2.8,.03]],tail:true},
- {amt:99000,label:'가장 밝은 별 · 이름을 새긴다',tone:[[396,0,.04],[528,.8,.04],[639,1.6,.04],[852,2.4,.03]],tail:true,binaural:4,name:true}];
+ {amt:990,  label:'작은 별',      say:'작은 마음도 별이 된다.',tone:[[432,0,.05],[216,0,.03]]},
+ {amt:3900, label:'조금 밝은 별',  say:'잊고 싶지 않은 것 하나. 그만큼 밝아진다.',tone:[[528,0,.05],[792,1.1,.03]]},
+ {amt:9900, label:'두 음이 울리는 별',say:'간절한 만큼. 이 별은 멀리서도 보인다.',tone:[[396,0,.045],[528,1.0,.045],[639,2.0,.035]]},
+ {amt:29000,label:'유성 · 세 음',  say:'꼭 이루어져야 하는 것. 유성으로 올라간다.',tone:[[396,0,.045],[528,.9,.045],[639,1.8,.04],[852,2.8,.03]],tail:true},
+ {amt:99000,label:'가장 밝은 별 · 이름을 새긴다',say:'평생의 소원. 이름을 새긴다. 이 하늘에 영원히.',tone:[[396,0,.04],[528,.8,.04],[639,1.6,.04],[852,2.4,.03]],tail:true,binaural:4,name:true}];
 var W={tier:1,vis:0,custom:0};
 function fmt(n){return n.toLocaleString('ko-KR')+'원';}
 function setTier(i){W.tier=i;W.custom=0;var T=TIERS[i];
   document.querySelectorAll('#tiers button').forEach(function(b,k){b.classList.toggle('on',k===i);});
   document.getElementById('priceLabel').textContent=T.label+' · 이 하늘에 영원히';document.getElementById('priceVal').textContent=fmt(T.amt);
   document.getElementById('nameRow').classList.toggle('show',!!T.name);
+  var n=document.getElementById('tierNote');n.style.opacity='0';setTimeout(function(){n.textContent=T.say;n.style.opacity='1';},160);
   previewTone(T);}
 function setVis(v){W.vis=v;document.querySelectorAll('#vis button').forEach(function(b,k){b.classList.toggle('on',k===v);});document.getElementById('pubRow').classList.toggle('show',v===1);
   if(v===1)setTimeout(function(){document.getElementById('pubLine').focus();},200);}
@@ -404,7 +406,7 @@ function launchTone(T){if(!AC)return;stopPreview();var t=AC.currentTime;
 function customAmt(){var v=prompt('금액 (원) — 990 이상');if(!v)return;v=parseInt(String(v).replace(/[^0-9]/g,''),10);if(!(v>=990)){toast('990원부터');return;}
   W.custom=v;document.querySelectorAll('#tiers button').forEach(function(b){b.classList.remove('on');});
   var i=v>=99000?4:v>=29000?3:v>=9900?2:v>=3900?1:0;W.tier=i;document.getElementById('nameRow').classList.toggle('show',i===4);
-  document.getElementById('priceLabel').textContent=TIERS[i].label+' · 이 하늘에 영원히';document.getElementById('priceVal').textContent=fmt(v);previewTone(TIERS[i]);}
+  document.getElementById('priceLabel').textContent=TIERS[i].label+' · 이 하늘에 영원히';document.getElementById('priceVal').textContent=fmt(v);document.getElementById('tierNote').textContent=TIERS[i].say;previewTone(TIERS[i]);}
 document.getElementById('pubLine').addEventListener('input',function(e){document.getElementById('pubCnt').textContent=e.target.value.length;});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-t]');if(b){setTier(Number(b.getAttribute('data-t')));return;}var v=e.target.closest('[data-vis]');if(v){setVis(Number(v.getAttribute('data-vis')));}});
 
