@@ -47,7 +47,7 @@ h1{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:-.02em
 #time{font-size:12px;letter-spacing:.14em;color:var(--dim);font-variant-numeric:tabular-nums}
 #bot{width:100%;max-width:18rem;display:flex;gap:10px}
 #bot .btn{flex:1;height:48px;font-size:13px}
-#snd{position:fixed;right:20px;bottom:calc(74px + env(safe-area-inset-bottom));width:40px;height:40px;border-radius:50%;
+#snd{position:fixed;right:20px;bottom:calc(140px + env(safe-area-inset-bottom));width:40px;height:40px;border-radius:50%;
   border:1px solid rgba(233,230,223,.15);background:rgba(5,6,10,.4);color:var(--ash);font-size:12px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5}
 #snd.show{display:flex}
 #snd.off{color:var(--dim);text-decoration:line-through}
@@ -159,6 +159,19 @@ body.busy #biz,#sess.on~#biz,#done.on~#biz{opacity:0;pointer-events:none}
 #info td:first-child{color:var(--dim);width:38%}
 #info p{margin:4px 0}
 #info .x{position:fixed;top:14px;right:16px;background:none;border:1px solid rgba(233,230,223,.25);color:var(--bone);border-radius:999px;padding:6px 14px;font:inherit;font-size:12px}
+
+/* ── 자막(ticker): 함께 빌어준 소원 · 큰 별 ── */
+#tick{position:fixed;left:0;right:0;bottom:calc(100px + env(safe-area-inset-bottom));z-index:4;height:32px;overflow:clip;pointer-events:none;font-family:Pretendard,sans-serif;font-size:12.5px;color:rgba(233,230,223,.72);opacity:0;transition:opacity .6s;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+#tick.show{opacity:1}
+#tick .rail{display:inline-flex;gap:0;white-space:nowrap;will-change:transform;animation:tickmove var(--dur,60s) linear infinite;padding-top:8px}
+#tick .it{display:inline-flex;align-items:center;gap:6px;padding:0 28px;pointer-events:auto}
+#tick .it i{font-style:normal;color:var(--gold);font-size:11px}
+#tick .it b{font-weight:500;color:rgba(233,230,223,.5);font-size:11px}
+#tick .it em{font-style:normal;color:var(--ember);font-family:'Gowun Batang',serif;font-size:12px}
+@keyframes tickmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#sess.on~#tick,#done.on~#tick,body.busy #tick{opacity:0}
+@media (prefers-reduced-motion:reduce){#tick .rail{animation:none}}
 </style>
 </head>
 <body>
@@ -198,6 +211,7 @@ body.busy #biz,#sess.on~#biz,#done.on~#biz{opacity:0;pointer-events:none}
   <span>소원</span>
 </button>
 <button id="mystar" data-act="findStar">내 별</button>
+<div id="tick" aria-label="함께 빌어준 소원"><div class="rail" id="tickRail"></div></div>
 <footer id="biz">
   <div><button data-act="info">이용안내 · 환불 규정</button> · <button data-act="info">사업자 정보</button></div>
   <div>비움컴퍼니 · 대표 유지현 · 사업자등록번호 136-20-02566 · 통신판매업신고 제2026-서울광진-0685호</div>
@@ -214,7 +228,7 @@ body.busy #biz,#sess.on~#biz,#done.on~#biz{opacity:0;pointer-events:none}
     <table>
       <tr><td>상품명</td><td>소원 별 등록 (디지털 무형 서비스)</td></tr>
       <tr><td>내용</td><td>이용자가 작성한 소원을 우주 정거장 화면의 별 하나로 등록합니다. 결제 금액에 따라 별의 크기·밝기·소리가 달라지며, 99,990원 별에는 이름(6자)을 새길 수 있습니다. 소원 본문은 저장되지 않으며, 이용자가 공개를 선택한 한 줄만 다른 방문자에게 표시됩니다.</td></tr>
-      <tr><td>가격</td><td>1,110원 · 4,440원 · 8,880원 · 22,220원 · 99,990원 · 직접 입력(1,110원 이상) <br>무료 별: 다른 소원에 🙏 7회 시 1개 (7일 후 자동 소멸)</td></tr>
+      <tr><td>가격</td><td>1,110원 · 4,440원 · 8,880원 · 22,220원 · 99,990원 · 직접 입력(1,110원 이상) <br>띄워보기(무료): 별이 올라간 뒤 바로 사라지며 저장·공개되지 않음</td></tr>
       <tr><td>제공 기간</td><td>결제 완료 즉시 등록. 유료 별은 서비스 운영 기간 동안 영구 게시. 무료 별은 등록일로부터 7일.</td></tr>
       <tr><td>제공 방법</td><td>결제 직후 화면에서 바로 확인 (배송 없음)</td></tr>
       <tr><td>결제 수단</td><td>신용·체크카드, 간편결제 (토스페이먼츠)</td></tr>
@@ -244,7 +258,7 @@ body.busy #biz,#sess.on~#biz,#done.on~#biz{opacity:0;pointer-events:none}
   </div>
 </div>
 
-<div id="launch"><div class="txt" id="launchTxt"></div><div id="launchBtns"><button class="btn pri" data-act="share" data-i18n="shareStar">내 별 공유하기</button><button class="btn" data-act="launchClose" data-i18n="close">닫기</button></div></div>
+<div id="launch"><div class="txt" id="launchTxt"></div><div id="launchBtns"><button class="btn pri" id="lShare" data-act="share" data-i18n="shareStar">내 별 공유하기</button><button class="btn pri" id="lKeep" data-act="wish" style="display:none">남기고 싶다 · 별 띄우기</button><button class="btn" data-act="launchClose" data-i18n="close">닫기</button></div></div>
 <div id="wish">
   <div class="sheet">
     <div class="k">소원 띄우기</div>
@@ -259,7 +273,7 @@ body.busy #biz,#sess.on~#biz,#done.on~#biz{opacity:0;pointer-events:none}
     <div id="pubRow"><input id="pubLine" maxlength="40" placeholder="하늘에 보일 한 줄 (40자)"><div class="cnt"><span id="pubCnt">0</span> / 40</div></div>
     <div class="k" style="margin-top:18px">마음의 크기</div>
     <div class="tiers" id="tiers">
-      <button data-t="free" id="tFree"><i style="--s:2.5px;--free:1"></i><b>무료</b><span id="freeSub">🙏 0/7</span></button>
+      <button data-t="free" id="tFree"><i style="--s:2.5px;--free:1"></i><b>띄워보기</b><span id="freeSub">무료 · 사라짐</span></button>
       <button data-t="0"><i style="--s:3px"></i><b>1,110</b><span>시작</span></button>
       <button data-t="1" class="on"><i style="--s:5px"></i><b>4,440</b><span>지켜줌</span></button>
       <button data-t="2"><i style="--s:7px"></i><b>8,880</b><span>풍요</span></button>
@@ -560,7 +574,7 @@ function applyEnDeep(){
   window.__enLaunch=['Let go.','Rising.','It became a star.\nIt stays in this sky forever.'];}
 setTimeout(applyLang,50);
 /* ───────── 소원 ───────── */
-var PAY_MODE='toss'; /* 'test' → 결제 없이 흐름만 · 'toss' → 실결제 */
+var PAY_MODE='soon'; /* 'soon' → 결제 심사 중(띄워보기만) · 'test' → 결제 없이 흐름만 · 'toss' → 실결제 */
 var TOSS_CLIENT_KEY='test_ck_c19wocmNLyhvwVfb9YiBAurGD59yMHTLVh'; /* 토스 개발자센터 → API 키 → 클라이언트 키 */
 var TIERS=[
  {amt:1110, label:'작은 별 · 1110',      say:'1·1·1·0 — 시작. 새로운 문이 열리는 숫자. 작은 마음도 별이 된다.',tone:[[432,0,.05],[216,0,.03]]},
@@ -568,21 +582,19 @@ var TIERS=[
  {amt:8880, label:'두 음이 울리는 별 · 8880',say:'8·8·8·0 — 풍요. 간절한 만큼, 이 별은 멀리서도 보인다.',tone:[[396,0,.045],[528,1.0,.045],[639,2.0,.035]]},
  {amt:22220,label:'유성 · 22220',  say:'2·2·2·2·0 — 실현. 꼭 이루어져야 하는 것, 유성으로 올라간다.',tone:[[396,0,.045],[528,.9,.045],[639,1.8,.04],[852,2.8,.03]],tail:true},
  {amt:99990,label:'가장 밝은 별 · 99990 · 이름을 새긴다',say:'9·9·9·9·0 — 완성. 평생의 소원. 이름을 새긴다. 이 하늘에 영원히.',tone:[[396,0,.04],[528,.8,.04],[639,1.6,.04],[852,2.4,.03]],tail:true,binaural:4,name:true}];
-var FREE_T={amt:0,label:'무료 별 · 7일',say:'7명에게 빌어준 마음으로 띄운다. 7일 뒤 사라진다. 영원히 남기려면 1,110부터.',tone:[[432,0,.035]]};
+var FREE_T={amt:0,label:'띄워보기 · 지금 사라지는 별',say:'한 번 올라가고, 사라진다. 아무도 읽지 않는다. 남기고 싶으면 별을 사라.',tone:[[432,0,.035]]};
 var FREE_NEED=7;var FREE={count:0,avail:0};try{var f=JSON.parse(localStorage.getItem('space:free')||'{}');FREE.count=f.count||0;FREE.avail=f.avail||0;FREE.used=f.used||0;}catch(e){}
 function saveFree(){try{localStorage.setItem('space:free',JSON.stringify(FREE));}catch(e){}}
-function freeUI(){var b=document.getElementById('tFree'),sub=document.getElementById('freeSub');if(!b)return;
-  if(FREE.avail>0){sub.textContent='별 '+FREE.avail+'개 · 7일';b.classList.remove('off');}else{sub.textContent='🙏 '+FREE.count+'/'+FREE_NEED;b.classList.add('off');}
-  var badge=document.getElementById('freeBadge');if(badge)badge.style.display=FREE.avail>0?'block':'none';}
+function freeUI(){}
 var W={tier:1,vis:0,custom:0,free:0};
 function fmt(n){return LANG==='en'?'₩'+n.toLocaleString('en-US'):n.toLocaleString('ko-KR')+'원';}
 function setTier(i){
   if(i==='custom'){customAmt();return;}
-  if(i==='free'){if(FREE.avail<=0){toast('다른 소원 '+(FREE_NEED-FREE.count)+'개에 더 빌어주면 무료 별 하나');return;}
-    W.free=1;W.custom=0;W.tier=0;document.querySelectorAll('#tiers button').forEach(function(b){b.classList.toggle('on',b.id==='tFree');});
+  if(i==='free'){
+    W.free=1;setVis(0);document.getElementById('vis').style.display='none';W.custom=0;W.tier=0;document.querySelectorAll('#tiers button').forEach(function(b){b.classList.toggle('on',b.id==='tFree');});
     document.getElementById('priceLabel').textContent=FREE_T.label;document.getElementById('priceVal').textContent='0원';
     document.getElementById('nameRow').classList.remove('show');var n0=document.getElementById('tierNote');n0.style.opacity='0';setTimeout(function(){n0.textContent=FREE_T.say;n0.style.opacity='1';},160);previewTone(FREE_T);return;}
-  W.free=0;W.tier=i;W.custom=0;var T=TIERS[i];
+  W.free=0;document.getElementById('vis').style.display='';W.tier=i;W.custom=0;var T=TIERS[i];
   document.querySelectorAll('#tiers button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===String(i));});
   document.getElementById('priceLabel').textContent=T.label+' · 이 하늘에 영원히';document.getElementById('priceVal').textContent=fmt(T.amt);
   document.getElementById('nameRow').classList.toggle('show',!!T.name);
@@ -601,7 +613,7 @@ function launchTone(T){if(!AC)return;stopPreview();var t=AC.currentTime;
     g.gain.linearRampToValueAtTime(p[2]*1.6,t+p[1]+1.2);g.gain.setValueAtTime(p[2]*1.6,t+6.5);g.gain.exponentialRampToValueAtTime(.0001,t+9.6);o.start(t+p[1]);o.stop(t+10);});
   if(T.binaural&&AC.createStereoPanner){[[-1,0],[1,T.binaural]].forEach(function(q){var o=AC.createOscillator(),g=AC.createGain(),P=AC.createStereoPanner();o.frequency.value=200+q[1];g.gain.value=0;P.pan.value=q[0];o.connect(g);g.connect(P);P.connect(master);g.gain.linearRampToValueAtTime(.035,t+1.5);g.gain.exponentialRampToValueAtTime(.0001,t+9.6);o.start(t);o.stop(t+10);});}}
 function customAmt(){var v=prompt('금액 (원) — 1,110 이상');if(!v)return;v=parseInt(String(v).replace(/[^0-9]/g,''),10);if(!(v>=1110)){toast('1,110원부터');return;}
-  W.free=0;W.custom=v;document.querySelectorAll('#tiers button').forEach(function(b){b.classList.toggle('on',b.id==='tCustom');});document.querySelector('#tCustom b').textContent=v.toLocaleString('ko-KR');
+  W.free=0;document.getElementById('vis').style.display='';W.custom=v;document.querySelectorAll('#tiers button').forEach(function(b){b.classList.toggle('on',b.id==='tCustom');});document.querySelector('#tCustom b').textContent=v.toLocaleString('ko-KR');
   var i=v>=99990?4:v>=22220?3:v>=8880?2:v>=4440?1:0;W.tier=i;document.getElementById('nameRow').classList.toggle('show',i===4);
   document.getElementById('priceLabel').textContent=TIERS[i].label+' · 이 하늘에 영원히';document.getElementById('priceVal').textContent=fmt(v);document.getElementById('tierNote').textContent=TIERS[i].say;previewTone(TIERS[i]);}
 document.getElementById('pubLine').addEventListener('input',function(e){document.getElementById('pubCnt').textContent=e.target.value.length;});
@@ -609,7 +621,16 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-t]')
 
 /* ───────── 떠다니는 소원 · 함께 빌기 ───────── */
 var FEED={items:[],seen:{},prayed:{}};try{FEED.prayed=JSON.parse(localStorage.getItem('space:prayed')||'{}');}catch(e){}
-function loadFeed(){fetch('/api/feed',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){if(d&&d.items)FEED.items=d.items;}).catch(function(){
+
+/* 자막: 🙏 많은 순 + 큰 별 순. 두 벌 이어 붙여 끊김 없이 돈다 */
+function renderTick(list){var t=document.getElementById('tick'),rail=document.getElementById('tickRail');if(!t||!rail)return;
+  if(!list||!list.length){t.classList.remove('show');return;}
+  function glyph(a){return a>=99990?'✦':a>=22220?'☄':a>=8880?'✧':'·';}
+  function esc(x){return String(x).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
+  var html=list.map(function(x){return '<span class="it"><i>'+glyph(x.amt)+'</i>'+(x.nm?'<em>'+esc(x.nm)+'</em>':'')+'<span>'+esc(x.line)+'</span>'+(x.n?'<b>🙏 '+x.n+'</b>':'')+'</span>';}).join('');
+  rail.innerHTML=html+html;rail.style.setProperty('--dur',Math.max(30,list.length*7)+'s');t.classList.add('show');}
+function loadFeed(){fetch('/api/feed',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){if(d&&d.items)FEED.items=d.items;if(d)renderTick(d.ticker);}).catch(function(){
+  if(!FEED.items.length){renderTick([{line:'레오야 거기서도 햇빛 잘 드는 자리에',n:112,amt:22220},{line:'엄마 수술 잘 되게',n:47,amt:4440},{line:'80살의 나에게. 잘 살았다고.',n:31,amt:99990,nm:'조용한빛'},{line:'이번 달은 좀 숨 쉬게',n:9,amt:1110}]);}
   if(!FEED.items.length)FEED.items=[{id:'d1',line:'엄마 수술 잘 되게',n:47},{id:'d2',line:'레오야 거기서도 햇빛 잘 드는 자리에',n:112},{id:'d3',line:'이번 달은 좀 숨 쉬게',n:23},{id:'d4',line:'아빠가 아프지 않게',n:89},{id:'d5',line:'내가 나를 미워하지 않게',n:64}];});}
 var feedI=0;
 function spawnFeed(){var F=document.getElementById('feed');if(!F||!FEED.items.length||document.body.classList.contains('busy'))return;
@@ -620,11 +641,10 @@ function spawnFeed(){var F=document.getElementById('feed');if(!F||!FEED.items.le
   F.appendChild(el);el.addEventListener('animationend',function(){el.remove();});}
 function pray(el){var id=el.getAttribute('data-fid');if(FEED.prayed[id]){toast('이미 빌었다');return;}
   FEED.prayed[id]=1;try{localStorage.setItem('space:prayed',JSON.stringify(FEED.prayed));}catch(e){}
-  FREE.count++;if(FREE.count>=FREE_NEED){FREE.count=0;FREE.avail++;toast('무료 별 하나가 생겼다 · 7일');}saveFree();freeUI();
   el.classList.add('prayed');var it=FEED.items.filter(function(x){return x.id===id;})[0];if(it){it.n=(it.n||0)+1;el.querySelector('b').textContent='🙏 '+it.n;}
   try{navigator.vibrate&&navigator.vibrate(10);}catch(e){}
   if(AC){var t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.frequency.value=659.3;g.gain.value=0;o.connect(g);g.connect(master);g.gain.linearRampToValueAtTime(.04,t+.1);g.gain.exponentialRampToValueAtTime(.0001,t+3);o.start(t);o.stop(t+3.2);}
-  fetch('/api/pray',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,u:UID})}).then(function(r){return r.json();}).then(function(d){if(d&&d.prays){FREE.total=d.prays;FREE.count=d.prays%FREE_NEED;FREE.avail=Math.max(0,Math.floor(d.prays/FREE_NEED)-(FREE.used||0));saveFree();freeUI();}}).catch(function(){});
+  fetch('/api/pray',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,u:UID})}).then(function(r){return r.json();}).then(function(d){}).catch(function(){});
   toast('함께 빌었다');}
 document.addEventListener('click',function(e){var f=e.target.closest('.fw');if(f)pray(f);});
 setTimeout(function(){loadFeed();setInterval(loadFeed,45000);setInterval(spawnFeed,7000);setTimeout(spawnFeed,2500);},2000);
@@ -639,7 +659,8 @@ function sendWish(){var v=wishTA.value.trim();if(!v){toast(LANG==='en'?'One line
   if(pub&&hasBad(pub)){toast(LANG==='en'?'That line can\'t go in the sky. Try other words.':'그 한 줄은 하늘에 올릴 수 없다. 다른 말로.');document.getElementById('pubLine').focus();return;}
   var nm=TIERS[W.tier].name?document.getElementById('starName').value.trim():'';
   var payload={amt:W.free?0:(W.custom||TIERS[W.tier].amt),tier:W.tier,pub:pub,name:nm,free:W.free?1:0};
-  if(W.free){if(FREE.avail<=0){toast('무료 별이 없다');return;}FREE.avail--;FREE.used=(FREE.used||0)+1;saveFree();freeUI();doLaunch(v,payload);return;}
+  if(W.free){payload.pub='';doLaunch(v,payload,'free');return;}
+  if(PAY_MODE==='soon'){toast('영구 별 결제는 심사 중이다. 곧 열린다. 지금은 띄워보기만.');return;}
   if(PAY_MODE==='test'){doLaunch(v,payload);return;}
   payToss(payload);}
 function payToss(pl){
@@ -659,24 +680,26 @@ function payToss(pl){
   var pk=q.get('paymentKey'),oid=q.get('orderId'),amt=Number(q.get('amount'));
   if(!pend||pend.orderId!==oid){toast('주문 정보를 찾지 못했다');return;}
   toast('결제 확인 중');
-  fetch('/api/pay-confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentKey:pk,orderId:oid,amount:amt,u:UID,pub:pend.pl.pub,tier:pend.pl.tier})})
+  fetch('/api/pay-confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentKey:pk,orderId:oid,amount:amt,u:UID,pub:pend.pl.pub,tier:pend.pl.tier,name:pend.pl.name||''})})
    .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
    .then(function(x){if(!x.ok){toast('승인 실패: '+(x.j.message||x.j.error));return;}
      window.__paidIdx=x.j.idx;window.__paidWishes=x.j.wishes;setTimeout(function(){doLaunch(pend.text||'',pend.pl,true);},900);})
    .catch(function(){toast('서버 연결 실패');});})();
 function doLaunch(text,pl,paid){pl=pl||{amt:1110,tier:0,pub:'',name:''};closeWish();startAudio();document.body.classList.add('busy');var wasHome=document.getElementById('home').classList.contains('on');document.getElementById('home').classList.remove('on');document.getElementById('pres').style.opacity='0';
   var idx;
-  (paid?Promise.resolve({idx:window.__paidIdx,wishes:window.__paidWishes}):fetch('/api/wish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({u:UID,len:text.length,amt:pl.amt,tier:pl.tier,pub:pl.pub,free:pl.free||0})})
+  var isFree=paid==='free';document.getElementById('lShare').style.display=isFree?'none':'';document.getElementById('lKeep').style.display=isFree?'':'none';
+  (isFree?Promise.resolve({idx:PRES.wishes,wishes:PRES.wishes,tmp:1}):paid?Promise.resolve({idx:window.__paidIdx,wishes:window.__paidWishes}):fetch('/api/wish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({u:UID,len:text.length,amt:pl.amt,tier:pl.tier,pub:pl.pub,free:pl.free||0})})
    .then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}))
    .then(function(d){
-     if(d&&typeof d.idx==='number'){idx=d.idx;PRES.wishes=d.wishes||PRES.wishes+1;}
+     if(d&&d.tmp){idx=d.idx;}else if(d&&typeof d.idx==='number'){idx=d.idx;PRES.wishes=d.wishes||PRES.wishes+1;}
      else{PRES.wishes=Number(localStorage.getItem('space:wishes')||0)+1;try{localStorage.setItem('space:wishes',PRES.wishes);}catch(e){}idx=PRES.wishes-1;}
      wishTA.value='';document.getElementById('wishCnt').textContent='0';
      var L=document.getElementById('launch'),T=document.getElementById('launchTxt');
-     var EL=window.__enLaunch&&LANG==='en'?window.__enLaunch:['손을 놓는다.','올라간다.','별이 되었다.\n이 하늘에 영원히 남는다.'];T.textContent=EL[0];L.classList.add('on');
+     var EL=isFree?['손을 놓는다.','올라간다.','빛났다. 그리고 사라진다.\n남기고 싶으면, 별을 띄워라.']:(window.__enLaunch&&LANG==='en'?window.__enLaunch:['손을 놓는다.','올라간다.','별이 되었다.\n이 하늘에 영원히 남는다.']);T.textContent=EL[0];L.classList.add('on');
      launchTone(pl.free?FREE_T:TIERS[pl.tier]);if(pl.pub){FEED.items.unshift({id:'me'+Date.now(),line:pl.pub,n:0});}
      if(pl.name){try{localStorage.setItem('space:starname',pl.name);}catch(e){}}
      window.launchWish(idx,function(){
+       if(isFree){setWishCount(Math.min(600,PRES.wishes)+1,-1);setTimeout(function(){setWishCount(Math.min(600,PRES.wishes),PRES.mine);},9000);T.textContent=EL[2];L.classList.add('done');window.__afterLaunch=function(){L.classList.remove('on');L.classList.remove('done');if(wasHome){document.getElementById('home').classList.add('on');document.body.classList.remove('busy');}document.getElementById('pres').style.opacity='1';};return;}
        PRES.mine=idx;try{localStorage.setItem('space:mine',JSON.stringify(idx));}catch(e){}
        setWishCount(Math.min(600,PRES.wishes),idx);presText();
        T.textContent=EL[2];
@@ -756,6 +779,7 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-act]
   if(a==='home'){stopAudio();show('home');}
   if(a==='wish'){openWish();}
   if(a==='wishClose'){closeWish();}
+  if(a==='wish'&&document.getElementById('launch').classList.contains('on')){if(window.__afterLaunch)window.__afterLaunch();}
   if(a==='info'){document.getElementById('info').classList.add('on');return;}
   if(a==='infoClose'){document.getElementById('info').classList.remove('on');return;}
   if(a==='wishSend'){sendWish();}
@@ -769,6 +793,9 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-act]
   if(a==='snd'){sndOn=!sndOn;b.classList.toggle('off',!sndOn);if(AC)master.gain.setTargetAtTime(sndOn?1:0,AC.currentTime,.8);}
 });
 document.addEventListener('visibilitychange',function(){if(document.hidden&&AC&&AC.state==='running'&&!S.run)AC.suspend();});
+</script>
+<script>
+(function(){var home=document.getElementById('home'),t=document.getElementById('tick'),b=document.getElementById('biz');function upd(){var h=home.classList.contains('on');[t,b].forEach(function(el){if(!el)return;el.style.visibility=h?'':'hidden';});}new MutationObserver(upd).observe(home,{attributes:true,attributeFilter:['class']});upd();})();
 </script>
 </body>
 </html>
