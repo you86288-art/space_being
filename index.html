@@ -107,7 +107,7 @@ h1{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:-.02em
 #wish .lnk{background:none;border:none;color:var(--ash);font:inherit;font-size:11px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
 #wish .sheet{max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
 /* 떠다니는 소원 한 줄 */
-#feed{position:fixed;left:0;right:0;top:calc(96px + env(safe-area-inset-top));height:22vh;pointer-events:none;z-index:4;overflow:hidden}
+#feed{position:fixed;left:0;right:0;top:calc(104px + env(safe-area-inset-top));height:clamp(80px,13vh,120px);pointer-events:none;z-index:4;overflow:hidden}
 .fw{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;pointer-events:auto;background:rgba(5,6,10,.42);border:1px solid rgba(233,230,223,.08);border-radius:999px;padding:7px 12px 7px 10px;font-size:12px;color:rgba(233,230,223,.78);white-space:nowrap;max-width:88vw;animation:fwUp 14s linear forwards;cursor:pointer;backdrop-filter:blur(4px)}
 .fw i{width:5px;height:5px;border-radius:50%;background:#F2C77A;box-shadow:0 0 8px rgba(242,199,122,.9);flex:none}
 .fw em{font-style:normal;overflow:hidden;text-overflow:ellipsis}
