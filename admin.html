@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>정거장 관리</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+:root{--ink:#05060A;--bone:#E9E6DF;--dim:rgba(233,230,223,.55);--line:rgba(233,230,223,.12);--ember:#C8A063;--gold:#F2C77A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--bone);font-family:Pretendard,sans-serif;font-size:14px;line-height:1.6;padding:20px 16px 80px;max-width:720px;margin:0 auto}
+h1{font-size:16px;font-weight:600;letter-spacing:.02em;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 20px}
+.stats div{border:1px solid var(--line);border-radius:10px;padding:10px 8px;text-align:center}
+.stats b{display:block;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.stats span{font-size:11px;color:var(--dim)}
+label{display:block;font-size:11px;color:var(--dim);margin:10px 0 4px;letter-spacing:.06em}
+input,select,textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--bone);border-radius:8px;padding:10px 12px;font:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ember);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--bone);border-radius:8px;padding:10px 14px;min-height:44px;cursor:pointer}
+button.pri{background:var(--ember);color:var(--ink);border-color:var(--ember);font-weight:600}
+button.sm{min-height:36px;padding:6px 10px;font-size:12px}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.list .it{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
+.list .it:last-child{border-bottom:0}
+.list .m{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+.list .hid{opacity:.4}
+.list .nm{color:var(--gold);margin-right:6px}
+.acts{display:flex;gap:4px}
+.msg{font-size:12px;color:var(--dim);margin-top:8px;min-height:18px}
+.key{display:flex;gap:8px;align-items:end}
+.key>div{flex:1}
+</style>
+</head>
+<body>
+<h1>우주 정거장 · 관리</h1>
+
+<div class="card">
+  <div class="key"><div><label>관리자 키 (Vercel 환경변수 ADMIN_KEY)</label><input id="key" type="password" autocomplete="current-password" placeholder="키 입력"></div><button id="enter" class="pri">들어가기</button></div>
+  <div class="msg" id="kmsg"></div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="stats"><div><b id="sHere">-</b><span>지금 떠 있음</span></div><div><b id="sTotal">-</b><span>지금까지</span></div><div><b id="sWish">-</b><span>소원</span></div><div><b id="sRev">-</b><span>결제 합계</span></div></div>
+
+  <div class="card">
+    <b style="font-weight:600">소원 직접 띄우기</b>
+    <p class="msg" style="margin-top:2px">피드·자막에 실제 별로 올라간다. 🙏는 0에서 시작 — 숫자는 만들지 않는다. 매출엔 안 잡힌다.</p>
+    <label>한 줄 (40자, 금칙어 자동 차단)</label><input id="aLine" maxlength="40" placeholder="예: 엄마 수술 잘 되게">
+    <div class="row">
+      <div><label>별 크기</label><select id="aAmt"><option value="1110">· 작은 별 (1,110)</option><option value="4440" selected>· 조금 밝은 (4,440)</option><option value="8880">✧ 두 음 (8,880)</option><option value="22220">☄ 유성 (22,220)</option><option value="99990">✦ 가장 밝은 · 이름 (99,990)</option></select></div>
+      <div><label>이름 (99,990만, 6자)</label><input id="aNm" maxlength="6" placeholder="조용한빛"></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px"><button id="add" class="pri">띄우기</button><button id="reload">새로고침</button></div>
+    <div class="msg" id="amsg"></div>
+  </div>
+
+  <div class="card">
+    <b style="font-weight:600">소원 목록</b> <span class="msg" id="cnt"></span>
+    <div class="list" id="list"></div>
+  </div>
+</div>
+
+<script>
+var KEY='';var $=function(s){return document.querySelector(s);};
+function api(body){var o={headers:{'x-admin':KEY,'Content-Type':'application/json'}};if(body){o.method='POST';o.body=JSON.stringify(body);}return fetch('/api/admin',o).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});});}
+function esc(x){return String(x||'').replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+function glyph(a){return a>=99990?'✦':a>=22220?'☄':a>=8880?'✧':'·';}
+function load(){api().then(function(x){if(!x.ok){$('#kmsg').textContent=x.j.err==='no'?'키가 틀렸다':'서버 없음 ('+x.j.err+')';$('#app').style.display='none';return;}
+  try{sessionStorage.setItem('adm',KEY);}catch(e){}
+  $('#app').style.display='';$('#kmsg').textContent='';var d=x.j;
+  $('#sHere').textContent=d.here;$('#sTotal').textContent=d.total.toLocaleString();$('#sWish').textContent=d.wishes.toLocaleString();$('#sRev').textContent=d.revenue.toLocaleString()+'원';
+  $('#cnt').textContent='공개 '+d.items.length+'개';
+  $('#list').innerHTML=d.items.map(function(it){return '<div class="it'+(it.hidden?' hid':'')+'" data-id="'+it.id+'"><div><span class="nm">'+(it.nm?esc(it.nm):'')+'</span>'+glyph(it.amt)+' '+esc(it.line)+'<div class="m">'+it.id+' · 🙏 '+it.n+' · '+(it.amt?it.amt.toLocaleString()+'원':'관리자')+(it.rep?' · 신고 '+it.rep:'')+(it.hidden?' · 숨김':'')+' · '+(it.t?new Date(it.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</div></div><div class="acts">'+(it.hidden?'<button class="sm" data-a="show">보이기</button>':'<button class="sm" data-a="hide">숨기기</button>')+'<button class="sm" data-a="edit">수정</button><button class="sm" data-a="del">삭제</button></div></div>';}).join('')||'<div class="msg">아직 공개 소원이 없다.</div>';
+});}
+$('#enter').onclick=function(){KEY=$('#key').value.trim();if(!KEY)return;load();};
+$('#key').addEventListener('keydown',function(e){if(e.key==='Enter')$('#enter').click();});
+$('#reload').onclick=load;
+$('#add').onclick=function(){var line=$('#aLine').value.trim(),amt=Number($('#aAmt').value),nm=amt>=99990?$('#aNm').value.trim():'';if(!line){$('#amsg').textContent='한 줄을 적어라';return;}
+  api({act:'add',line:line,amt:amt,nm:nm}).then(function(x){$('#amsg').textContent=x.ok?'올라갔다 · '+x.j.id:'실패: '+(x.j.err||'');if(x.ok){$('#aLine').value='';$('#aNm').value='';load();}});};
+$('#list').addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var id=b.closest('.it').getAttribute('data-id'),a=b.getAttribute('data-a');
+  if(a==='del'&&!confirm(id+' 삭제? 되돌릴 수 없다.'))return;
+  if(a==='edit'){var cur=b.closest('.it').querySelector('div').childNodes[2];var v=prompt('수정 (40자)',cur?cur.textContent.trim():'');if(!v)return;api({act:'edit',id:id,line:v}).then(load);return;}
+  api({act:a,id:id}).then(load);});
+try{var k=sessionStorage.getItem('adm');if(k){KEY=k;$('#key').value=k;load();}}catch(e){}
+</script>
+</body>
+</html>
