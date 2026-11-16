@@ -317,7 +317,8 @@ body.busy #biz,#sess.on~#biz,#done.on~#biz{opacity:0;pointer-events:none}
     <div class="price"><span id="priceLabel">조금 밝은 별 · 4440 · 이 하늘에 영원히</span><b id="priceVal">4,440원</b></div>
     <div class="row"><button class="btn" data-act="wishClose">닫기</button><button class="btn pri" data-act="wishSend">띄우기</button></div>
     <p class="fine">우주는 약속하지 않는다. 띄우는 건 너다.</p>
-    <p class="fine" style="margin-top:4px">이어폰을 끼면 소리가 다르다 · <button class="lnk" data-act="info">환불 규정</button></p>
+    <p class="fine" style="margin-top:4px">이어폰을 끼면 소리가 다르다</p>
+    <p class="fine policy" style="margin-top:8px;line-height:1.7;color:rgba(233,230,223,.7)">상품: 소원 별 등록(디지털 무형 서비스) · <b>제공 기간: 결제 즉시 등록, 서비스 운영 기간 동안 영구 게시</b> · 제공 방법: 결제 직후 화면 표시 · <b>환불: 결제 후 7일 이내 전액 환불</b>, 결제 오류·중복은 기간 무관 전액 · 문의 you86288@gmail.com · <button class="lnk" data-act="info">이용안내·환불 규정 전문</button></p>
   </div>
 </div>
 <div id="msg">
@@ -614,7 +615,7 @@ function applyEnDeep(){
   window.__enLaunch=['Let go.','Rising.','It became a star.\nIt stays in this sky forever.'];}
 setTimeout(applyLang,50);
 /* ───────── 소원 ───────── */
-var PAY_MODE='soon'; /* 'soon' → 결제 심사 중(띄워보기만) · 'test' → 결제 없이 흐름만 · 'toss' → 실결제 */
+var PAY_MODE='toss'; /* 'soon' → 결제 심사 중(띄워보기만) · 'test' → 결제 없이 흐름만 · 'toss' → 실결제 */
 var TOSS_CLIENT_KEY='test_ck_c19wocmNLyhvwVfb9YiBAurGD59yMHTLVh'; /* 토스 개발자센터 → API 키 → 클라이언트 키 */
 var TIERS=[
  {amt:1110, label:'작은 별 · 1110',      say:'1·1·1·0 — 시작. 새로운 문이 열리는 숫자. 작은 마음도 별이 된다.',tone:[[432,0,.05],[216,0,.03]]},
